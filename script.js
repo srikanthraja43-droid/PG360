@@ -1,4 +1,4 @@
-// ===== PG360 Main Script =====
+// ===== PG360 — Avir-style 3D Movement & Cinematic Scroll =====
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ===== Reveal on scroll =====
+  // ===== Scroll Reveal with stagger =====
   const revealElements = document.querySelectorAll(
     '.amenity-card, .security-item, .hk-item, .support-card, .dining-content, .common-content, .feature-split, .hk-header'
   );
@@ -108,81 +108,90 @@ document.addEventListener('DOMContentLoaded', () => {
             entry.target.closest('.security-grid') ||
             entry.target.closest('.hk-items') ||
             entry.target.closest('.support-cards'))
-          ? Array.from(entry.target.parentElement.children).indexOf(entry.target) * 80
+          ? Array.from(entry.target.parentElement.children).indexOf(entry.target) * 120
           : 0
         );
         revealObserver.unobserve(entry.target);
       }
     });
   }, {
-    threshold: 0.15,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.1,
+    rootMargin: '0px 0px -60px 0px'
   });
 
   revealElements.forEach(el => revealObserver.observe(el));
 
-  // ===== Hero parallax on scroll + mouse move =====
+  // ===== AVIR-STYLE HERO: 3D Perspective Shrink on Scroll =====
   const heroBgImg = document.getElementById('hero-bg-img');
   const heroSection = document.querySelector('.hero-section');
   const heroBg = document.querySelector('.hero-bg');
   const heroText = document.querySelector('.hero-text-overlay');
+  const scrollIndicator = document.getElementById('scroll-indicator');
 
   if (heroBgImg && heroSection && heroBg) {
-    let mouseX = 0;
-    let mouseY = 0;
-    let currentX = 0;
-    let currentY = 0;
+    let heroMouseX = 0;
+    let heroMouseY = 0;
+    let heroCurrentX = 0;
+    let heroCurrentY = 0;
 
-    // Scroll parallax & Avir-style scale down
+    // Scroll: shrink + round + 3D perspective tilt
     window.addEventListener('scroll', () => {
       const scrolled = window.scrollY;
       const heroH = heroSection.offsetHeight;
-      if (scrolled <= heroH + 100) {
-        const pct = Math.max(0, scrolled / heroH);
-        
-        // Image saturation
-        heroBgImg.style.filter = `saturate(${0.7 + pct * 0.3})`;
-        
-        // Avir Webflow effect: shrink background, round corners, parallax down
-        const scale = Math.max(0.75, 1 - (pct * 0.25));
-        const rounded = Math.min(60, pct * 80);
-        const yMove = pct * (heroH * 0.3); // Parallax the bg container down
-        
-        heroBg.style.transform = `translateY(${yMove}px) scale(${scale})`;
+      if (scrolled <= heroH + 200) {
+        const pct = Math.max(0, Math.min(1, scrolled / heroH));
+
+        // Saturation increase
+        heroBgImg.style.filter = `saturate(${0.7 + pct * 0.4}) brightness(${1 - pct * 0.15})`;
+
+        // Avir signature: shrink + round corners + perspective tilt
+        const scale = Math.max(0.72, 1 - (pct * 0.28));
+        const rounded = Math.min(48, pct * 65);
+        const rotateX = pct * 3; // subtle 3D tilt forward on scroll
+        const yMove = pct * (heroH * 0.25);
+
+        heroBg.style.transform = `perspective(1500px) translateY(${yMove}px) scale(${scale}) rotateX(${rotateX}deg)`;
         heroBg.style.borderRadius = `${rounded}px`;
         heroBg.style.transformOrigin = 'center top';
-        
-        // Fade and move text up
+        heroBg.style.boxShadow = `0 ${30 * pct}px ${80 * pct}px rgba(42,33,24,${0.3 * pct})`;
+
+        // Fade text up with 3D
         if (heroText) {
-          const textOpacity = 1 - (pct * 1.5);
+          const textOpacity = 1 - (pct * 2);
           heroText.style.opacity = Math.max(0, textOpacity);
-          heroText.style.transform = `translateY(${pct * -150}px)`;
+          heroText.style.transform = `translate3d(0, ${pct * -180}px, ${pct * 100}px)`;
+        }
+
+        // Hide scroll indicator
+        if (scrollIndicator) {
+          scrollIndicator.style.opacity = Math.max(0, 1 - pct * 5);
         }
       }
     }, { passive: true });
 
-    // Mouse move parallax
+    // Mouse move: 3D depth parallax on hero image
     heroSection.addEventListener('mousemove', (e) => {
       const rect = heroSection.getBoundingClientRect();
-      mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2; // -1 to 1
-      mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2; // -1 to 1
+      heroMouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      heroMouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
     });
 
     heroSection.addEventListener('mouseleave', () => {
-      mouseX = 0;
-      mouseY = 0;
+      heroMouseX = 0;
+      heroMouseY = 0;
     });
 
-    // Smooth animation loop
+    // Smooth animation loop for hero
     function animateHero() {
-      currentX += (mouseX - currentX) * 0.05;
-      currentY += (mouseY - currentY) * 0.05;
+      heroCurrentX += (heroMouseX - heroCurrentX) * 0.04;
+      heroCurrentY += (heroMouseY - heroCurrentY) * 0.04;
 
-      const moveX = currentX * 20; // max 20px shift
-      const moveY = currentY * 15; // max 15px shift
+      const moveX = heroCurrentX * 25;
+      const moveY = heroCurrentY * 18;
+      const rotateY = heroCurrentX * 2;
+      const rotateX = heroCurrentY * -1.5;
 
-      // Base zoom for the image inside the container
-      heroBgImg.style.transform = `scale(1.08) translate(${moveX}px, ${moveY}px)`;
+      heroBgImg.style.transform = `scale(1.1) translate3d(${moveX}px, ${moveY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
       requestAnimationFrame(animateHero);
     }
     animateHero();
@@ -198,17 +207,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ===== Smooth cursor-following highlight on amenity cards =====
+  // ===== Amenity Card: 3D mouse spotlight =====
   const amenityCards = document.querySelectorAll('.amenity-card');
   amenityCards.forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       const y = ((e.clientY - rect.top) / rect.height) * 100;
-      card.style.background = `radial-gradient(circle at ${x}% ${y}%, var(--bg-darker) 0%, var(--bg-dark) 60%, var(--bg) 100%)`;
+      const rotateX = ((y - 50) / 50) * -4;
+      const rotateY = ((x - 50) / 50) * 4;
+      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+      card.style.background = `radial-gradient(circle at ${x}% ${y}%, var(--bg-darker) 0%, var(--bg-dark) 40%, var(--bg) 100%)`;
+      card.style.boxShadow = `0 20px 40px rgba(42,33,24,0.12), 0 8px 16px rgba(42,33,24,0.08)`;
     });
     card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
       card.style.background = '';
+      card.style.boxShadow = '';
     });
   });
 
@@ -234,8 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const renderCursor = () => {
-      ringX += (mouseX - ringX) * 0.15;
-      ringY += (mouseY - ringY) * 0.15;
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
       ring.style.transform = `translate(calc(${ringX}px - 50%), calc(${ringY}px - 50%))`;
       requestAnimationFrame(renderCursor);
     };
@@ -264,14 +279,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ===== 3D Tilt View Effect on Images =====
+  // ===== DEEP 3D TILT on Images (Avir-style cinematic) =====
   const tiltWrappers = document.querySelectorAll('.dining-image-wrap, .common-image-wrap, .service-img, .about-mission-img');
-  
+
   tiltWrappers.forEach(wrap => {
     const img = wrap.querySelector('img');
     if (!img) return;
 
-    // Smooth physics variables
+    // Create a shine/light overlay for 3D effect
+    const shine = document.createElement('div');
+    shine.style.cssText = `
+      position: absolute; inset: 0; z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 0%, rgba(0,0,0,0) 100%);
+      transition: opacity 0.4s ease;
+      opacity: 0;
+    `;
+    wrap.style.position = 'relative';
+    wrap.appendChild(shine);
+
     let currentTiltX = 0;
     let currentTiltY = 0;
     let targetTiltX = 0;
@@ -283,35 +309,89 @@ document.addEventListener('DOMContentLoaded', () => {
       const rect = wrap.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
+
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      
-      // Calculate target tilt angles
-      targetTiltX = ((y - centerY) / centerY) * -12; // Max 12 deg tilt
-      targetTiltY = ((x - centerX) / centerX) * 12;
+
+      const pctX = (x - centerX) / centerX;
+      const pctY = (y - centerY) / centerY;
+
+      targetTiltX = pctY * -18; // Max 18 deg
+      targetTiltY = pctX * 18;
+
+      // Move the shine/light based on mouse
+      shine.style.background = `radial-gradient(circle at ${(pctX + 1) * 50}% ${(pctY + 1) * 50}%, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.05) 60%, rgba(0,0,0,0.15) 100%)`;
+      shine.style.opacity = '1';
     });
-    
+
     wrap.addEventListener('mouseleave', () => {
       isHovering = false;
       targetTiltX = 0;
       targetTiltY = 0;
+      shine.style.opacity = '0';
     });
 
     const animateTilt = () => {
-      // Lerp for buttery smoothness
-      currentTiltX += (targetTiltX - currentTiltX) * 0.1;
-      currentTiltY += (targetTiltY - currentTiltY) * 0.1;
-      
+      currentTiltX += (targetTiltX - currentTiltX) * 0.08;
+      currentTiltY += (targetTiltY - currentTiltY) * 0.08;
+
       if (isHovering || Math.abs(currentTiltX) > 0.01 || Math.abs(currentTiltY) > 0.01) {
-        const scale = isHovering ? 1.05 : 1;
-        img.style.transform = `perspective(1200px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) scale(${scale})`;
+        const scale = isHovering ? 1.06 : 1;
+        const translateZ = isHovering ? 30 : 0;
+        img.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) scale(${scale}) translateZ(${translateZ}px)`;
+        img.style.transition = 'none';
       }
-      
+
       requestAnimationFrame(animateTilt);
     };
-    
+
     animateTilt();
   });
+
+  // ===== Parallax depth on sections while scrolling =====
+  const parallaxSections = document.querySelectorAll('.dining-section, .housekeeping-section');
+  window.addEventListener('scroll', () => {
+    parallaxSections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      const windowH = window.innerHeight;
+      if (rect.top < windowH && rect.bottom > 0) {
+        const pct = (windowH - rect.top) / (windowH + rect.height);
+        const label = section.querySelector('.section-label');
+        if (label) {
+          label.style.transform = `translateY(${(pct - 0.5) * -20}px)`;
+        }
+      }
+    });
+  }, { passive: true });
+
+  // ===== HK (How it works) items — 3D entrance on scroll =====
+  const hkItems = document.querySelectorAll('.hk-item');
+  const hkObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(entry.target.parentElement.children).indexOf(entry.target);
+        entry.target.style.transitionDelay = `${idx * 150}ms`;
+        entry.target.classList.add('hk-visible');
+        hkObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  hkItems.forEach(item => {
+    item.classList.add('hk-animated');
+    hkObserver.observe(item);
+  });
+
+  // ===== Stats counter animation =====
+  const statNumbers = document.querySelectorAll('.stat-number');
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('stat-visible');
+        statObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  statNumbers.forEach(el => statObserver.observe(el));
 
 });

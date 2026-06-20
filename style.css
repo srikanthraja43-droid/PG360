@@ -423,36 +423,10 @@ body {
   background: var(--border);
 }
 
-.amenity-card {
-  background: var(--bg);
-  padding: 48px 36px;
-  transition: all 0.4s var(--ease);
-  cursor: default;
-}
-
-.amenity-card:hover {
-  background: var(--bg-dark);
-  transform: translateY(-4px);
-}
-
-.amenity-icon {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 24px;
-}
-
 .amenity-icon svg {
   width: 100%;
   height: 100%;
   color: var(--accent);
-}
-
-.amenity-card h3 {
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--text);
 }
 
 .amenity-card p {
@@ -886,7 +860,7 @@ body {
 @keyframes fadeUp {
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) rotateX(0);
   }
 }
 
@@ -895,18 +869,125 @@ body {
   50% { transform: translateY(6px); }
 }
 
-/* ===== SCROLL REVEAL ===== */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ===== HERO 3D SUPPORT ===== */
+.hero-bg {
+  will-change: transform, border-radius;
+  transition: box-shadow 0.4s var(--ease);
+  overflow: hidden;
+}
+
+.hero-section {
+  perspective: 1500px;
+}
+
+.hero-text-overlay {
+  will-change: transform, opacity;
+}
+
+/* ===== 3D SCROLL REVEAL ===== */
 .reveal {
   opacity: 0;
-  transform: translateY(40px) scale(0.96);
-  filter: blur(8px);
-  transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: perspective(1200px) translateY(50px) rotateX(4deg) scale(0.95);
+  filter: blur(10px);
+  transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
 }
 
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: perspective(1200px) translateY(0) rotateX(0) scale(1);
   filter: blur(0);
+}
+
+/* ===== 3D IMAGE WRAPPERS ===== */
+.dining-image-wrap,
+.common-image-wrap,
+.service-img,
+.about-mission-img {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+.dining-image-wrap img,
+.common-image-wrap img,
+.service-img img,
+.about-mission-img img {
+  will-change: transform;
+  transition: transform 0.1s linear;
+  transform-origin: center center;
+  backface-visibility: hidden;
+}
+
+/* ===== 3D AMENITY CARDS ===== */
+.amenity-card {
+  background: var(--bg);
+  padding: 48px 36px;
+  cursor: default;
+  will-change: transform, box-shadow;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.4s var(--ease),
+              box-shadow 0.4s var(--ease);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.amenity-card:hover {
+  /* transform handled by JS for 3D tilt */
+}
+
+.amenity-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 24px;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.amenity-card:hover .amenity-icon {
+  transform: translateZ(20px) scale(1.1);
+}
+
+.amenity-card h3 {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.amenity-card:hover h3 {
+  transform: translateZ(10px);
+}
+
+/* ===== HK ITEMS 3D ENTRANCE ===== */
+.hk-animated {
+  opacity: 0;
+  transform: perspective(800px) translateY(40px) rotateX(6deg);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.hk-animated.hk-visible {
+  opacity: 1;
+  transform: perspective(800px) translateY(0) rotateX(0);
+}
+
+/* ===== STAT NUMBER ANIMATION ===== */
+.stat-number {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stat-number.stat-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ===== CUSTOM CURSOR & MAGNETIC ===== */
@@ -926,6 +1007,7 @@ body {
     z-index: 9999;
     transform: translate(-50%, -50%);
     transition: width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
   }
 
   .custom-cursor-ring {
@@ -945,10 +1027,10 @@ body {
   }
   
   .custom-cursor-ring.hover {
-    width: 60px;
-    height: 60px;
-    background-color: rgba(139, 110, 82, 0.1);
-    border-color: transparent;
+    width: 64px;
+    height: 64px;
+    background-color: rgba(139, 110, 82, 0.08);
+    border-color: rgba(139, 110, 82, 0.4);
   }
 }
 
