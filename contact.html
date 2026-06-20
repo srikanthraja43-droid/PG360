@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — PG360 PG & Hostel Management</title>
+  <meta name="description" content="Get in touch with PG360 to book a demo or make an enquiry. We are here to answer any questions you may have.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="nav-logo">
+      <a href="index.html" id="nav-logo-link">PG<span>360</span></a>
+    </div>
+    <nav class="nav-links" id="nav-links">
+      <a href="index.html#section-about" class="nav-link" id="nav-about">ABOUT</a>
+      <a href="index.html#section-features" class="nav-link" id="nav-features">FEATURES</a>
+      <a href="index.html#section-portal" class="nav-link" id="nav-portal">TENANT PORTAL</a>
+      <a href="index.html#section-how" class="nav-link" id="nav-how">HOW IT WORKS</a>
+      <a href="services.html" class="nav-link" id="nav-pricing">PRICING</a>
+      <div class="nav-dropdown">
+        <a href="contact.html" class="nav-link nav-cta active" id="nav-contact">START FREE ↓</a>
+        <div class="dropdown-menu">
+          <a href="contact.html#demo" id="nav-demo">Book a Demo</a>
+          <a href="contact.html#signin" id="nav-signin">Sign In</a>
+        </div>
+      </div>
+    </nav>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="main-content" style="margin-left: 0;"> <!-- Overriding sidebar margin for clean page -->
+    <!-- Page Hero -->
+    <section class="hero-section" id="section-hero">
+      <div class="hero-bg">
+        <img src="images/common-area.png" alt="Contact Us" class="hero-bg-img" id="hero-bg-img">
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="hero-text-overlay">
+        <div class="hero-label">PG360</div>
+        <h1 class="hero-title">GET IN TOUCH</h1>
+        <p class="hero-desc">Whether you want to see a live demo of our software or have questions about our features, we'd love to hear from you.</p>
+      </div>
+    </section>
+
+    <!-- Contact Content -->
+    <section class="contact-section" id="section-contact">
+      <div class="contact-info reveal">
+        <div class="contact-info-header">
+          <h2>We're here to help.</h2>
+          <p>Reach out to our dedicated support team or drop by our office. We typically respond to all enquiries within 2 hours.</p>
+        </div>
+        
+        <div class="contact-details">
+          <div class="contact-detail-item">
+            <h5>CALL US</h5>
+            <a href="tel:+919000000001">+91 90000 00001</a>
+          </div>
+          <div class="contact-detail-item">
+            <h5>EMAIL US</h5>
+            <a href="mailto:hello@pg360.software">hello@pg360.software</a>
+          </div>
+          <div class="contact-detail-item">
+            <h5>CORPORATE OFFICE</h5>
+            <p>123 Business Park, Block C<br>Koramangala 5th Block<br>Bangalore, Karnataka 560095</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-section reveal" id="demo">
+        <h3>SEND A MESSAGE</h3>
+        
+        <form class="contact-form">
+          <div class="form-group">
+            <label for="intent">I WANT TO...</label>
+            <select id="intent" name="intent">
+              <option value="book_demo">Book a live demo</option>
+              <option value="general_enquiry">Make a general enquiry</option>
+              <option value="partnership">Discuss a partnership</option>
+            </select>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">FIRST NAME</label>
+              <input type="text" id="fname" name="fname" placeholder="John" required>
+            </div>
+            <div class="form-group">
+              <label for="lname">LAST NAME</label>
+              <input type="text" id="lname" name="lname" placeholder="Doe" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">EMAIL ADDRESS</label>
+              <input type="email" id="email" name="email" placeholder="john@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">PHONE NUMBER</label>
+              <input type="tel" id="phone" name="phone" placeholder="+91 00000 00000" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="beds">NUMBER OF BEDS</label>
+            <select id="beds" name="beds">
+              <option value="under50">Under 50 beds</option>
+              <option value="50-100">50 - 100 beds</option>
+              <option value="100-250">100 - 250 beds</option>
+              <option value="250plus">250+ beds</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="message">MESSAGE</label>
+            <textarea id="message" name="message" placeholder="How can we help you?"></textarea>
+          </div>
+          
+          <button type="submit" class="form-submit">Submit Request</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo">PG<span>360</span></div>
+          <p>The operating system for PG & hostel owners in India. Calm and in control.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h5>PRODUCT</h5>
+            <a href="index.html#section-about" id="footer-about">About</a>
+            <a href="index.html#section-features" id="footer-features">Features</a>
+            <a href="index.html#section-portal" id="footer-portal">Tenant Portal</a>
+            <a href="index.html#section-how" id="footer-how">How it works</a>
+            <a href="services.html" id="footer-pricing">Pricing</a>
+          </div>
+          <div class="footer-col">
+            <h5>CONTACT</h5>
+            <a href="tel:+919626339586" id="footer-phone">+91 96263 39586</a>
+          </div>
+          </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 PG360. Made in India 🇮🇳</span>
+        <span>GST-ready invoices · UPI & bank</span>
+      </div>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    // Handle form select intent based on URL hash
+    document.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash;
+      const select = document.getElementById('intent');
+      
+      if (hash === '#demo') {
+        select.value = 'book_demo';
+      } else if (hash === '#enquiry') {
+        select.value = 'general_enquiry';
+      }
+    });
+  </script>
+</body>
+</html>
